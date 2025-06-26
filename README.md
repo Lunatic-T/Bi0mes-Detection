@@ -4,5 +4,6 @@
 > ### automatic username detection
 
 ## All you will need:
-> ### A Discord Webhook Link
-> ### The Role to Mention When a Glitch Or Dreamspace Biome Spawns
+> ### A Discord Webhook Link 🔗
+> ### The Role to Mention When Glitch/Dreamspace Spawns 🌸
+> ### Read The Info Given In Console ℹ️
