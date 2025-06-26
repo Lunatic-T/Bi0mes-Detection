@@ -1,7 +1,7 @@
-# Bi0mes - A python Script
+# Bi0mes v1.1.6 / A python Script
 
-> ### automatic private server link detection
-> ### automatic username detection
+> ### Automatic Private Server Link Detection 🔒
+> ### Automatic Username Detection ✅
 
 ## All you will need:
 > ### A Discord Webhook Link 🔗
