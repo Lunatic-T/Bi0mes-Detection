@@ -7,7 +7,7 @@
 > ### Multi Instance Support for however many instances you need (UWP/Web)
 > ### To Save Webhook And Roleid Ping You have to Press Enter while in the Text Box
 > ### Leave a Star if you like my Development!
-> ### Everything is Open Source (Python 3.11) (specific packages: aiohttp, discord.py-self)
+> ### Everything is Open Source! (Python 3.11) (specific packages: aiohttp, discord.py-self)
 
 
 # All you will need:
