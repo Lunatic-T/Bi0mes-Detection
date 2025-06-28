@@ -10,7 +10,7 @@
 > ### Everything is Open Source (Python 3.11) (specific packages: aiohttp, discord.py-self)
 > ### Dm Me If You Want To Suggest Something! dc: .lunary.
 
-## All you will need:
+# All you will need:
 > ### A Discord Webhook Link 🔗
 > ### The Role to Mention When Glitch/Dreamspace Spawns 
 > ### Read The Info Given In Console 
