@@ -5,6 +5,7 @@
 > ### Sends The Biome With a Webhook 
 > ### Also detects new equipped auras (wont ping just send)
 > ### Multi Instance Support for however many instances you need (UWP/Web)
+> ### To Save Webhook And Roleid Ping You have to Press Enter while in the Text Box
 > ### Leave a Star if you like my Development!
 > ### Everything is Open Source (Python 3.11)
 > ### Dm Me If You Want To Suggest Something! dc: .lunary.
