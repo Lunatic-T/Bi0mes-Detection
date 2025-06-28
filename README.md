@@ -1,7 +1,13 @@
-# Bi0mes v1.1.6 / A python Script
+# Bi0mes v1.1.6 / A python Biome detection Script 
 
 > ### Automatic Private Server Link Detection 
 > ### Automatic Username Detection 
+> ### Sends The Biome With a Webhook 
+> ### Also detects new equipped auras (wont ping just send)
+> ### Multi Instance Support for however many instances you need (UWP/Web)
+> ### Leave a Star if you like my Development!
+> ### Everything is Open Source (Python 3.11)
+> ### Dm Me If You Want To Suggest Something! dc: .lunary.
 
 ## All you will need:
 > ### A Discord Webhook Link 🔗
