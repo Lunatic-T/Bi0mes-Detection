@@ -13,4 +13,4 @@
 # All you will need:
 > ### A Discord Webhook Link 🔗
 > ### The Role to Mention When Glitch/Dreamspace Spawns 
-> ### Read The Info Given In Console 
+> ### The Info Given In Console 
