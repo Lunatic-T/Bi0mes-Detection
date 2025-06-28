@@ -15,6 +15,8 @@ from discord import Embed
 from pathlib import Path
 import hashlib
 
+print("\n\n\033[91m----------INFO----------\n\033[94mBiomes get detected automatically.\n\033[92mUpdates define how many times the game gives the biome and aura equipped to this script.\n\033[91m1. \033[96mTo get the script to Recognize the Private server you're in, you must join a private server with the script on.\n\033[91m2. \033[96mTo register Your Username In the script, In your own private server, kick yourself and let it auto rejoin.\n\033[93mThis script works for BOTH UWP and WEB, and is multi-instance compatible.\n\033[91mYou must do these steps for each instance.\n\033[91m----------INFO----------\033[0m\n\n")
+
 def safe_var_name(log_path):
     return hashlib.md5(str(log_path).encode()).hexdigest()
 
@@ -69,7 +71,8 @@ lastline = ""
 
 # --- Log Matching Pattern ---
 rpc_pattern = re.compile(r'\[BloxstrapRPC\] (.*)')
-disconnection_pattern = re.compile(r'\[FLog\:\:Network\] Client\:Disconnect (.*)')
+disconnection_pattern = re.compile(r'\[FLog::Network\] NetworkClient:Remove')
+connection_pattern = re.compile(r'\[FLog::Network\] NetworkClient:Create')
 
 # --- Webhooks ---
 async def webhooksend(embeds, content=None):
@@ -133,7 +136,7 @@ def parse_access_code_from_all_logs(log_path: Path):
                     match = access_code_regex.search(line)
                     if match:
                         access_code = match.group(1)
-                        print(f"\033[94m[{file.name}] \033[92maccessCode: \033[96m{access_code}")
+                        print(f"\033[94m[{file.name}] \033[92mPrivate Server accessCode: \033[96m{access_code}")
                         return access_code
         except Exception as e:
             print(f"\033[96m[ERROR] \033[96mProblem Reading {file.name}: \033[91m{e}\033[0m ")
@@ -163,7 +166,7 @@ def parse_username_from_all_logs(log_path: Path):
                             username_match = re.search(r'"UserName"\s*:\s*"([^"]+)"', ticket_json_str)
                             if username_match:
                                 username = username_match.group(1)
-                                print(f"\033[94m[{file.name}] \033[92mUser: \033[96m{username}")
+                                print(f"\033[94m[{file.name}] \033[92mUsername: \033[96m{username}")
                                 return username
         except Exception as e:
             print(f"\033[91m[ERROR] \033[96mProblem Reading {file.name}: \033[91m{e}\033[0m ")
@@ -180,7 +183,7 @@ async def tail_log_and_update(log_path):
     source_tag = generate_source_tag(log_path)
     init_globals_for_tag(source_tag)
 
-    print(f"\033[94m[{log_name}] \033[92mStr of Monitored Obj is \033[96m{source_tag}")
+    print(f"\033[94m[{log_name}] \033[92mMonitoring Source '\033[96m{source_tag}\033[92m'")
 
     with open(log_path, "r", encoding="utf-8", errors="ignore") as f:
         if globals()[f"CurrentAccessCode_{source_tag}"] is None:
@@ -193,7 +196,7 @@ async def tail_log_and_update(log_path):
             username = parse_username_from_all_logs(log_path)
             if username:
                 globals()[f"CurrentUsername_{source_tag}"] = username
-        userNameofInstance = globals()[f"CurrentUsername_{source_tag} "]
+        userNameofInstance = globals()[f"CurrentUsername_{source_tag}"]
         f.seek(0, os.SEEK_END)
         while True:
             if restart:
@@ -222,18 +225,23 @@ async def tail_log_and_update(log_path):
                                 globals()[f"CurrentUsername_{source_tag}"] = username_match.group(1)
                                 username = username_match.group(1)
                                 userNameofInstance = username
-                                print("\033[94m[Username] New Username Defined:", accessCodeofInstance)
+                                print("\033[94m[Username] Username Defined:", username)
                             
             access_code_regex = re.compile(r'"accessCode"\s*:\s*"([0-9a-fA-F\-]{36})"')
             accessmatched = access_code_regex.search(line)
             if accessmatched:
                 globals()[f"CurrentAccessCode_{source_tag}"] = accessmatched.group(1)
                 accessCodeofInstance = accessmatched.group(1)
-                print("\033[94m[accessCode] \033[92mNew accessCode Defined:", accessCodeofInstance)
+                print("\033[94m[accessCode] \033[92mNew Private Server Detected:", accessCodeofInstance)
                 
             isdisconnected = disconnection_pattern.search(line)
             if isdisconnected:
-                print("disconnected!?")
+                print(f"\033[94m[{userNameofInstance}] \033[91mUser Left the Game\033[0m")
+            
+            isconnected = connection_pattern.search(line)
+            if isconnected:
+                print(f"\033[94m[{userNameofInstance}] \033[92mUser Joined the Game\033[0m")
+                
                 
             if not match:
                 continue
@@ -266,10 +274,10 @@ async def tail_log_and_update(log_path):
                 ping = ""
                 color = 0xFFFFFF
                 if biome == "GLITCH":
-                    ping = webhookroleid
+                    ping = (f"<@&{webhookroleid}>")
                     color = 0x55ff55
                 elif biome == "DREAMSPACE":
-                    ping = webhookroleid
+                    ping = (f"<@&{webhookroleid}>")
                     color = 0xffb6c1
 
                 embed = discord.Embed(
@@ -301,6 +309,23 @@ bgcolor="#444"
 topbarcolor="#222"
 labelfgcolor="#fff"
 activebuttonbg="#777"
+
+def add_placeholder(entry, placeholder):
+    def on_focus_in(event):
+        if entry.get() == placeholder:
+            entry.delete(0, tk.END)
+            entry.config(fg="white")
+
+    def on_focus_out(event):
+        if not entry.get():
+            entry.insert(0, placeholder)
+            entry.config(fg="#aaa")
+
+    entry.insert(0, placeholder)
+    entry.config(fg="#aaa")
+    entry.bind("<FocusIn>", on_focus_in)
+    entry.bind("<FocusOut>", on_focus_out)
+
 def start_move_advancedroot(event):
     root._drag_start_x = event.x_root
     root._drag_start_y = event.y_root
@@ -359,7 +384,7 @@ topbar.place(x=0, y=0, relwidth=1)
 SettingsFrame = tk.Frame(root, bg="#444")
 SettingsFrame.place(x=0, y=20, relwidth=1, relheight=1, height=-20)
 
-TopBarLabel = tk.Label(topbar, text="Bi0mes \\ v1.1.0", bg=topbar['bg'], fg=labelfgcolor, font=("Segoe UI", 10, "bold"))
+TopBarLabel = tk.Label(topbar, text="Bi0mes \\ v1.1.6", bg=topbar['bg'], fg=labelfgcolor, font=("Segoe UI", 10, "bold"))
 TopBarLabel.place(relx=0.5, rely=0.5, anchor="center")
 
 x = (root.winfo_screenwidth() // 2) - (root.winfo_width() // 2)
@@ -428,12 +453,9 @@ def settextfromsavedinstance(uielement, name):
 
 row = 0
 taskrunning = False
-testreboot = False
 
 async def start_all_log_watchers():
     global UPD_COUNT, restart, taskrunning
-    print("okman")
-
     while True:
         if not taskrunning:
             taskrunning = True
@@ -476,18 +498,22 @@ def okbro():
 def op():
     threading.Thread(target=okbro, daemon=True).start()
     
-def printokbro():
-    print("ok bro clicked the button smh")
+def updates_count():
+    print("Current updates is:", globals()['UPD_COUNT'])
     
 Webhooklnk = add_labeled_entry(SettingsFrame, "Web Delay", row=row); row += 1
 Webhooklnk.bind("<Return>", Webhooksave)
 Webhookmentionroleid = add_labeled_entry(SettingsFrame, "Webhook Role mention", row=row); row += 1
 Webhookmentionroleid.bind("<Return>", Webhooksave)
 
+
+add_placeholder(Webhooklnk, "Webhook Link")
+add_placeholder(Webhookmentionroleid, "Webhook Pings")
 settextfromsavedinstance(Webhooklnk, "webhookLink")
 settextfromsavedinstance(Webhookmentionroleid, "webhookRoleID")
 
-toggleloop = add_button(SettingsFrame, "Detect Biomes", run, row=row); row += 1
-randomserver = add_button(SettingsFrame, "wip", printokbro, row=row); row += 1
+# toggleloop = add_button(SettingsFrame, "Detect Biomes", run, row=row); row += 1
+randomserver = add_button(SettingsFrame, "upd count", updates_count, row=row); row += 1
 op()
+run()
 root.mainloop()
