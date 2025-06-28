@@ -25,4 +25,9 @@
 
 
 
-> # Dm Me If You Want To Suggest Something! dc: .lunary.
+# Dms Open!
+
+> ### dc: .lunary.
+> ### other dc: lunatic.dev 
+
+> ### Hey! I started [my own server](https://discord.gg/7zuFCT8kYJ) for my projects!
